@@ -25,11 +25,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_main);
         nav = findViewById(R.id.nav_view);
         nav.setOnNavigationItemSelectedListener(this);
+        nav.setSelectedItemId(R.id.navigation_home);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        Fragment fragment = new HomeFragment();
+        Fragment fragment = null;
 
         switch (menuItem.getItemId()) {
             case R.id.navigation_home:

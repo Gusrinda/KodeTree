@@ -4,12 +4,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragment.AddFragment"
-    android:padding="18dp">
+    android:padding="20sp"
+    >
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello, this is ADD fragment" />
+            <TextView
+                android:layout_marginTop="20sp"
+                android:id="@+id/textNama"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nama Pohon : "/>
+
+            <EditText
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:hint="Masukkan nama pohon disini"/>
+
+            <TextView
+                android:layout_marginTop="20sp"
+                android:id="@+id/textJenis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jenis Pohon : "/>
+
+            <Spinner
+                android:id="@+id/spinJenis"
+                android:layout_width="280dp"
+                android:layout_height="35dp"/>
+
+            <TextView
+                android:layout_marginTop="24sp"
+                android:id="@+id/textGambar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ambil Gambar : "/>
+
+            <ImageView
+                android:id="@+id/imageCamera"
+                android:layout_marginTop="20sp"
+                android:layout_width="350dp"
+                android:layout_height="300dp" />
+
+            <
+
+        </LinearLayout>
+
 
 </FrameLayout>
