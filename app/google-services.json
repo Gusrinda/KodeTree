@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "679661996126",
+    "firebase_url": "https://kodetree-8a134.firebaseio.com",
+    "project_id": "kodetree-8a134",
+    "storage_bucket": "kodetree-8a134.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679661996126:android:04ecc83b82cefa5b",
+        "android_client_info": {
+          "package_name": "com.gusrinda.kodetree"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "679661996126-8aafpdgrknef5dj0siv3du9hbira1t41.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdNT2bEXjszyp9cqarLPsPFrA_3F0Ol0U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "679661996126-8aafpdgrknef5dj0siv3du9hbira1t41.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

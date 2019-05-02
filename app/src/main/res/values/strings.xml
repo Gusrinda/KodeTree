@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">KodeTree</string>
+    <string name="title_home">Home</string>
+    <string name="title_tambah">Tambah</string>
+    <string name="title_lokasi">Lokasi</string>
+    <string name="title_trivia">Trivia</string>
+    <string name="title_akun">Akun</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
