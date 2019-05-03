@@ -1,22 +1,20 @@
-package com.gusrinda.kodetree.Fragment;
+package com.gusrinda.kodetree.Activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -28,43 +26,37 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static android.app.Activity.RESULT_OK;
-
-public class AddFragment extends Fragment {
-
-    private EditText textNama;
-    private TextView lokasi;
-    private Button btnKamera, btnLokasi, btnTambah;
-    private ImageView imgKamera;
+public class CamActivity extends AppCompatActivity {
 
     private static final int CAMERA_REQUEST_CODE = 1;
+    String mCurrentPhotoPath;
 
-    private StorageReference mStorage;
+    Button btnKamera;
+    ImageView image;
+    StorageReference storage;
 
-    private ProgressDialog mProgress;
-
-    String currentPhotoPath;
+    ProgressDialog progressDialog;
 
     private File createImageFile() throws IOException {
-        // Create an image file name
+// Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
+// Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
             File photoFile = null;
             try {
@@ -74,7 +66,7 @@ public class AddFragment extends Fragment {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this.getContext(),
+                Uri photoURI = FileProvider.getUriForFile(this,
                         "com.gusrinda.kodetree.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
@@ -82,47 +74,44 @@ public class AddFragment extends Fragment {
             }
         }
     }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_add, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_cam);
 
-        textNama = view.findViewById(R.id.editNama);
-        lokasi = view.findViewById(R.id.editLokasi);
+        storage = FirebaseStorage.getInstance().getReference();
 
-        btnKamera = view.findViewById(R.id.btnCamera);
-        btnLokasi = view.findViewById(R.id.btnLokasi);
-        btnTambah = view.findViewById(R.id.btnTambah);
+        btnKamera = findViewById(R.id.btnKamera);
+        image = findViewById(R.id.imgHasil);
 
-        imgKamera = view.findViewById(R.id.imageCamera);
-
-        mStorage = FirebaseStorage.getInstance().getReference();
-
-        mProgress = new ProgressDialog(this.getContext());
+        progressDialog = new ProgressDialog(this);
 
         btnKamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                   dispatchTakePictureIntent();
+                dispatchTakePictureIntent();
             }
         });
-
-        return view;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK){
-            mProgress.setMessage("Mengolah gambar . . .");
-            mProgress.show();
-            Uri uri = getActivity().getIntent().getData();
-            StorageReference filepath = mStorage.child("Photos").child(uri.getPath());
+
+        if(requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK){
+            progressDialog.setMessage("Uploading...");
+            progressDialog.show();
+            Uri uri = data.getData();
+            StorageReference filepath = storage.child("Photos").child(uri.getLastPathSegment());
             filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    mProgress.dismiss();
-                    Toast.makeText(getContext(), "Gambar telah diambil", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CamActivity.this, "Upload Successful!",    Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(CamActivity.this, "Upload Failed!", Toast.LENGTH_SHORT).show();
                 }
             });
         }
