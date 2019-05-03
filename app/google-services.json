@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "679661996126-ne38cdp8hif5grss3oelutdsd8at4ar2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gusrinda.kodetree",
+            "certificate_hash": "f8a2e6482354bf6b162a5541827edd298c13ffbe"
+          }
+        },
+        {
           "client_id": "679661996126-8aafpdgrknef5dj0siv3du9hbira1t41.apps.googleusercontent.com",
           "client_type": 3
         }

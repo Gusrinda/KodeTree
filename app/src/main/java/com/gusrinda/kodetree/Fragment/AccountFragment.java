@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ public class AccountFragment extends Fragment {
 
     View view;
     TextView nama;
+    TextView point;
     Button btnLogout;
 
     FirebaseUser mUser;
@@ -37,6 +39,7 @@ public class AccountFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_account, container, false);
         nama = view.findViewById(R.id.textUsername);
         btnLogout = view.findViewById(R.id.btnLogout);
+        point = view.findViewById(R.id.tv_user_point_account);
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
         mReference = FirebaseDatabase.getInstance().getReference("Users").child(mUser.getUid());
@@ -45,7 +48,10 @@ public class AccountFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user =dataSnapshot.getValue(User.class);
-                nama.setText(user.getUsername());
+                Log.d("DATA SNAPSHOOT",dataSnapshot.toString());
+
+                onUserGet(user);
+               // point.setText(user.getPoint());
             }
 
             @Override
@@ -70,5 +76,11 @@ public class AccountFragment extends Fragment {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
+
+    private void onUserGet(User user){
+        nama.setText(user.getUsername());
+        String pointString = Integer.toString(user.getPoint());
+        point.setText(pointString);
+}
 
 }

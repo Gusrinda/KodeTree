@@ -1,5 +1,6 @@
 package com.gusrinda.kodetree.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +23,7 @@ import com.gusrinda.kodetree.R;
 import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
-
+    ProgressDialog progress;
     EditText username, email, password;
     Button btnDaftar;
 
@@ -33,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        progress = new ProgressDialog(this);
         username = findViewById(R.id.EditTextUsername);
         email = findViewById(R.id.EditTextEmail);
         password = findViewById(R.id.EditTextPassword);
@@ -51,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(txt_Username) || TextUtils.isEmpty(txt_Email) || TextUtils.isEmpty(txt_Password)) {
                     Toast.makeText(RegisterActivity.this, "Lengkapi semua field Fergusso!", Toast.LENGTH_SHORT).show();
-                } else if (txt_Password.length() < 6 ){
+                } else if (txt_Password.length() < 6) {
                     Toast.makeText(RegisterActivity.this, "Password minimal 6 karakter Fergusso!", Toast.LENGTH_SHORT).show();
                 } else {
                     register(txt_Username, txt_Email, txt_Password);
@@ -60,7 +61,13 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void register(final String username, String email, String password){
+    private void register(final String username, String email, String password) {
+        progress.setMessage("Please Wait");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setCancelable(false);
+        progress.setCanceledOnTouchOutside(false);
+        progress.setIndeterminate(false);
+        progress.show();
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -85,9 +92,11 @@ public class RegisterActivity extends AppCompatActivity {
                                         startActivity(intent);
                                         finish();
                                     }
+                                    progress.hide();
                                 }
                             });
                         } else {
+                            progress.hide();
                             Toast.makeText(RegisterActivity.this, "Tidak bisa register dengan Email dan Password ini Fergusso!", Toast.LENGTH_SHORT).show();
                         }
                     }

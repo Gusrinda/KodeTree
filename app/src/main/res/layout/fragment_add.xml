@@ -7,6 +7,10 @@
     android:padding="20sp"
     >
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -20,37 +24,75 @@
                 android:text="Nama Pohon : "/>
 
             <EditText
+                android:id="@+id/editNama"
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:hint="Masukkan nama pohon disini"/>
 
             <TextView
                 android:layout_marginTop="20sp"
-                android:id="@+id/textJenis"
+                android:id="@+id/textLokasi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Jenis Pohon : "/>
-
-            <Spinner
-                android:id="@+id/spinJenis"
-                android:layout_width="280dp"
-                android:layout_height="35dp"/>
+                android:text="Lokasi Pohon : "/>
 
             <TextView
-                android:layout_marginTop="24sp"
+                android:id="@+id/editLokasi"
+                android:layout_marginTop="12sp"
+                android:layout_width="300sp"
+                android:layout_height="wrap_content"
+                android:text="Lattitude, Longitude"
+                />
+
+
+            <Button
+                android:id="@+id/btnLokasi"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="12sp"
+                android:text="Ambil Lokasi"
+                android:textSize="8sp" />
+
+
+            <TextView
+                android:layout_marginTop="10sp"
                 android:id="@+id/textGambar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Ambil Gambar : "/>
 
             <ImageView
+                android:layout_gravity="center"
                 android:id="@+id/imageCamera"
                 android:layout_marginTop="20sp"
                 android:layout_width="350dp"
                 android:layout_height="300dp" />
 
+            <Button
+                android:id="@+id/btnCamera"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="12sp"
+                android:text="Ambil Gambar"
+                android:textSize="8sp" />
+
+            <Button
+                android:id="@+id/btnTambah"
+                android:layout_width="193dp"
+                android:layout_height="37dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/btn_rounded"
+                android:text="Tambahkan Pohon"
+                android:textColor="#FFFFFF" />
 
         </LinearLayout>
+
+
+    </ScrollView>
+
 
 
 </FrameLayout>
