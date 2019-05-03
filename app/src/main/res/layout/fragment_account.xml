@@ -3,72 +3,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.AccountFragment"
-    >
+    tools:context=".Fragment.AccountFragment">
 
     <LinearLayout
-        android:gravity="center"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher_round"/>
+            android:src="@mipmap/ic_launcher_round" />
 
         <TextView
             android:id="@+id/textUsername"
-            android:layout_margin="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:text="USERNAME"
-            android:textStyle="bold"
-            android:textSize="18dp"/>
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
         <LinearLayout
-            android:gravity="center_vertical"
-            android:layout_marginHorizontal="20dp"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
             <ImageView
-                android:padding="10dp"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/sprout"
-                />
+                android:padding="10dp" />
+            <!--android:src="@drawable/sprout"-->
+
             <TextView
-                android:layout_marginHorizontal="10dp"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
                 android:text="POIN :"
                 android:textSize="18dp"
-                android:textStyle="bold"
-                android:layout_gravity="center"
 
-                android:layout_height="wrap_content" />
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/tv_user_point_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="3"
                 android:textSize="18dp"
-                android:textStyle="bold"
-                android:layout_gravity="center"
-                />
+                android:textStyle="bold" />
         </LinearLayout>
 
         <Button
             android:id="@+id/btnLogout"
-            android:layout_marginTop="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/button"
-            android:textColor="@color/cardview_light_background"
             android:layout_marginHorizontal="20dp"
-            android:text="Logout"/>
+            android:layout_marginTop="12dp"
+            android:background="@color/button"
+            android:text="Logout"
+            android:textColor="@color/cardview_light_background" />
 
     </LinearLayout>
-
 
 
 </FrameLayout>

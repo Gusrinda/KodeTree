@@ -3,13 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.TriviaFragment"
-    >
+    android:orientation="vertical"
+    tools:context=".Fragment.TriviaFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_trivia_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello, this is TRIVIA fragment" />
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <ProgressBar
+        android:id="@+id/fragment_trivia_progress_bar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
 </FrameLayout>

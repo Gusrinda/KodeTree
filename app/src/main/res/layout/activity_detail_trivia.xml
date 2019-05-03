@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:context=".Activity.DetailTriviaActivity">
+
+    <TextView
+        android:id="@+id/detail_trivia_nama_pohon_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="40sp" />
+
+    <ImageView
+        android:id="@+id/detail_trivia_foto_pohon"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:src="@mipmap/ic_launcher_round" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingVertical="20dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/DetailTriviaTextView"
+                android:text="Nama pohon: " />
+
+            <TextView
+                android:id="@+id/detail_trivia_nama_pohon"
+                style="@style/DetailTriviaTextView" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/DetailTriviaTextView"
+                android:text="Nama latin: " />
+
+            <TextView
+                android:id="@+id/detail_trivia_nama_latin"
+                style="@style/DetailTriviaTextView" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/DetailTriviaTextView"
+                android:text="Jenis batang: " />
+
+            <TextView
+                android:id="@+id/detail_trivia_jenis_batang"
+                style="@style/DetailTriviaTextView" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/DetailTriviaTextView"
+                android:text="Jenis akar: " />
+
+            <TextView
+                android:id="@+id/detail_trivia_jenis_akar"
+                style="@style/DetailTriviaTextView" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/DetailTriviaTextView"
+                android:text="Jenis daun: " />
+
+            <TextView
+                android:id="@+id/detail_trivia_jenis_daun"
+                style="@style/DetailTriviaTextView" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/DetailTriviaTextView"
+                android:text="Manfaat: " />
+
+            <TextView
+                android:id="@+id/detail_trivia_manfaat"
+                style="@style/DetailTriviaTextView" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2" />
+    </LinearLayout>
+
+</LinearLayout>
