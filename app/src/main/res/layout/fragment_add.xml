@@ -62,12 +62,6 @@
                 android:layout_height="wrap_content"
                 android:text="Ambil Gambar : "/>
 
-            <ImageView
-                android:layout_gravity="center"
-                android:id="@+id/imageCamera"
-                android:layout_marginTop="20sp"
-                android:layout_width="350dp"
-                android:layout_height="300dp" />
 
             <Button
                 android:id="@+id/btnCamera"
@@ -76,7 +70,15 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="12sp"
                 android:text="Ambil Gambar"
-                android:textSize="8sp" />
+                android:textSize="8sp"/>
+
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/imageCamera"
+                android:layout_marginTop="20sp"
+                android:layout_width="350dp"
+                android:layout_height="300dp" />
+
 
             <Button
                 android:id="@+id/btnTambah"

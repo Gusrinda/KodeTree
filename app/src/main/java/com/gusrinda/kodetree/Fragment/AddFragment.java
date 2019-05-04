@@ -1,13 +1,18 @@
 package com.gusrinda.kodetree.Fragment;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
+import static android.os.Environment.getExternalStoragePublicDirectory;
 
 public class AddFragment extends Fragment {
 
@@ -37,54 +43,16 @@ public class AddFragment extends Fragment {
     private Button btnKamera, btnLokasi, btnTambah;
     private ImageView imgKamera;
 
-    private static final int CAMERA_REQUEST_CODE = 1;
 
     private StorageReference mStorage;
 
     private ProgressDialog mProgress;
 
-    String currentPhotoPath;
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-// Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File...
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this.getContext(),
-                        "com.gusrinda.kodetree.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
-            }
-        }
-    }
+    String pathFile;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_add, container, false);
 
         textNama = view.findViewById(R.id.editNama);
@@ -100,31 +68,87 @@ public class AddFragment extends Fragment {
 
         mProgress = new ProgressDialog(this.getContext());
 
+        if (Build.VERSION.SDK_INT >= 23) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},2);
+        }
+
         btnKamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                   dispatchTakePictureIntent();
+                dispatchPictureTakerIntent();
             }
         });
 
+        btnTambah.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadFile();
+            }
+        });
         return view;
     }
 
+    //Fungsi untuk memanggil kamera dan menyimpan gambar
+    private void dispatchPictureTakerIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(getContext().getPackageManager()) != null){
+            File photoFile = null;
+            photoFile = createPhotofile();
+            if (photoFile != null){
+                pathFile = photoFile.getAbsolutePath();
+                Uri photoUri = FileProvider.getUriForFile(this.getContext(), "com.gusrinda.kodetree.fileprovider", photoFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                startActivityForResult(intent, 1);
+            }
+        }
+
+    }
+
+    //Fungsi untuk membuat gambar berada di storage
+    private File createPhotofile() {
+        String name = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File StorageDir = getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = null;
+        try{
+            image = File.createTempFile(name, ".jpg", StorageDir);
+
+        } catch (IOException e){
+            Log.d("mylog", "Excep" + e.toString());
+        }
+        return  image;
+    }
+
+
+    //Fungsi ketika selesai menyimpan gambar dan menaruh hasilnya pada imageView
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK){
-            mProgress.setMessage("Mengolah gambar . . .");
+        if (resultCode == RESULT_OK){
+            if (requestCode == 1){
+                Bitmap bitmap = BitmapFactory.decodeFile(pathFile);
+                imgKamera.setImageBitmap(bitmap);
+            }
+        }
+    }
+
+    //Fungsi untuk uploading file pada Firebase
+    private void uploadFile(){
+        if (pathFile != null){
+            mProgress.setMessage("Data sedang ditambahkan");
             mProgress.show();
-            Uri uri = getActivity().getIntent().getData();
-            StorageReference filepath = mStorage.child("Photos").child(uri.getPath());
-            filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+            Uri file = Uri.fromFile(new File(pathFile));
+            StorageReference filePath = mStorage.child("Photos").child(file.getLastPathSegment());
+            filePath.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     mProgress.dismiss();
-                    Toast.makeText(getContext(), "Gambar telah diambil", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Data berhasil ditambahkan!", Toast.LENGTH_LONG).show();
                 }
             });
+        }
+        else {
+            //error
         }
     }
 }
