@@ -37,11 +37,18 @@
                 android:text="Lokasi Pohon : "/>
 
             <TextView
-                android:id="@+id/editLokasi"
+                android:id="@+id/editLatitude"
                 android:layout_marginTop="12sp"
                 android:layout_width="300sp"
                 android:layout_height="wrap_content"
-                android:text="Lattitude, Longitude"
+                android:text="Latitude"
+                />
+
+            <TextView
+                android:id="@+id/editLongitude"
+                android:layout_width="300sp"
+                android:layout_height="wrap_content"
+                android:text="Longitude"
                 />
 
 

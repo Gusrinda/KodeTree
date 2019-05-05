@@ -2,14 +2,19 @@ package com.gusrinda.kodetree.Fragment;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
@@ -22,7 +27,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -32,23 +41,25 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
-public class AddFragment extends Fragment {
+public class AddFragment extends Fragment implements LocationListener {
 
     private EditText textNama;
-    private TextView lokasi;
+    private TextView latitude, longitude;
     private Button btnKamera, btnLokasi, btnTambah;
     private ImageView imgKamera;
 
+    LocationManager locationManager;
 
     private StorageReference mStorage;
-
+    private DatabaseReference mReference;
     private ProgressDialog mProgress;
 
-    String pathFile;
+    String pathFile, Latitude, Longitude;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +67,8 @@ public class AddFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add, container, false);
 
         textNama = view.findViewById(R.id.editNama);
-        lokasi = view.findViewById(R.id.editLokasi);
+        latitude = view.findViewById(R.id.editLatitude);
+        longitude = view.findViewById(R.id.editLongitude);
 
         btnKamera = view.findViewById(R.id.btnCamera);
         btnLokasi = view.findViewById(R.id.btnLokasi);
@@ -76,6 +88,13 @@ public class AddFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 dispatchPictureTakerIntent();
+            }
+        });
+
+        btnLokasi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getLocation();
             }
         });
 
@@ -131,6 +150,41 @@ public class AddFragment extends Fragment {
         }
     }
 
+    //method untuk ambil data long lat
+    void getLocation() {
+        try {
+            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, this);
+        }
+        catch(SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //menampilkan long lat ke text view
+    @Override
+    public void onLocationChanged(Location location) {
+        latitude.setText(String.valueOf(location.getLatitude()));
+        longitude.setText(String.valueOf(location.getLongitude()));
+        Latitude = String.valueOf(location.getLatitude());
+        Longitude = String.valueOf(location.getLongitude());
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+        Toast.makeText(getContext(), "Nyalakan GPS dan Internet", Toast.LENGTH_SHORT).show();
+    }
+
     //Fungsi untuk uploading file pada Firebase
     private void uploadFile(){
         if (pathFile != null){
@@ -138,11 +192,34 @@ public class AddFragment extends Fragment {
             mProgress.show();
 
             Uri file = Uri.fromFile(new File(pathFile));
-            StorageReference filePath = mStorage.child("Photos").child(file.getLastPathSegment());
+            final StorageReference filePath = mStorage.child("Photos").child(file.getLastPathSegment());
             filePath.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    mProgress.dismiss();
+                    filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Uri downloadUrl = uri;
+                            String imgUrl = downloadUrl.toString();
+
+                            mReference = FirebaseDatabase.getInstance().getReference("Tumbuhan").push();
+
+                            HashMap<String, String> hashMap = new HashMap<>();
+                            hashMap.put("Nama", textNama.getText().toString());
+                            hashMap.put("Latitude", Latitude);
+                            hashMap.put("Longitude", Longitude);
+                            hashMap.put("imgUrl", imgUrl);
+
+                            mReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        mProgress.dismiss();
+                                    }
+                                }
+                            });
+                        }
+                    });
                     Toast.makeText(getContext(), "Data berhasil ditambahkan!", Toast.LENGTH_LONG).show();
                 }
             });
