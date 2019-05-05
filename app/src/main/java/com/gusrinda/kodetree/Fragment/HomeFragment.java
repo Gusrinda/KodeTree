@@ -28,10 +28,12 @@ public class HomeFragment extends Fragment {
         rv = view.findViewById(R.id.rv_banner_fragment_home);
         rv.setLayoutManager(new LinearLayoutManager(container.getContext()));
         ArrayList<BannerPojo> dataPojo = new ArrayList<>();
-        dataPojo.add(new BannerPojo(R.id.navigation_home,R.drawable.border,"Home"));
-        dataPojo.add(new BannerPojo(R.id.navigation_tambah,R.drawable.border,"Tambah Lokasi"));
-        dataPojo.add(new BannerPojo(R.id.navigation_trivia,R.drawable.border,"Lihat data baru"));
-        dataPojo.add(new BannerPojo(R.id.navigation_lokasi,R.drawable.border,"LIhat data Pohon disekitar anda"));
+//        dataPojo.add(new BannerPojo(R.id.navigation_home,R.drawable.ic_home_black_24dp,"Home"));
+        dataPojo.add(new BannerPojo(R.id.navigation_tambah,R.drawable.ic_add_circle_outline_black_24dp,"Mulai tambahakan data mengenai pohon "));
+        dataPojo.add(new BannerPojo(R.id.navigation_trivia,R.drawable.ic_lightbulb_outline_black_24dp,"Mau tau tentang pohon disekitar anda \n yuk cek  "));
+        dataPojo.add(new BannerPojo(R.id.navigation_lokasi,R.drawable.ic_pin_drop_black_24dp,"Lihat data Pohon disekitar anda"));
+        dataPojo.add(new BannerPojo(R.id.navigation_akun,R.drawable.ic_account_circle_black_24dp,"Lihat Poin Anda"));
+
 
         BottomNavigationView nav = getActivity().findViewById(R.id.nav_view);
         if(nav == null){

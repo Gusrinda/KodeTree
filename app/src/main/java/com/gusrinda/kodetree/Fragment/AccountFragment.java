@@ -1,5 +1,6 @@
 package com.gusrinda.kodetree.Fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +30,7 @@ public class AccountFragment extends Fragment {
     TextView nama;
     TextView point;
     Button btnLogout;
+    ProgressDialog progressBar;
 
     FirebaseUser mUser;
     DatabaseReference mReference;
@@ -40,16 +43,23 @@ public class AccountFragment extends Fragment {
         nama = view.findViewById(R.id.textUsername);
         btnLogout = view.findViewById(R.id.btnLogout);
         point = view.findViewById(R.id.tv_user_point_account);
+        progressBar = new ProgressDialog(this.getContext());
+        progressBar.setMessage("Sedang Mengambil data");
+        progressBar.show();
 
         mUser = FirebaseAuth.getInstance().getCurrentUser();
+        if(mUser==null){
+            Intent login = new Intent(getActivity().getBaseContext(),LoginActivity.class);
+            startActivity(login);
+
+        }
+
         mReference = FirebaseDatabase.getInstance().getReference("Users").child(mUser.getUid());
 
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user =dataSnapshot.getValue(User.class);
-                Log.d("DATA SNAPSHOOT",dataSnapshot.toString());
-
                 onUserGet(user);
                // point.setText(user.getPoint());
             }
@@ -77,10 +87,12 @@ public class AccountFragment extends Fragment {
         startActivity(intent);
     }
 
+    // dipanggil saat data user sudah didapatkan
     private void onUserGet(User user){
         nama.setText(user.getUsername());
         String pointString = Integer.toString(user.getPoint());
         point.setText(pointString);
+        progressBar.hide();
 }
 
 }

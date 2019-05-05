@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
@@ -35,6 +37,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.gusrinda.kodetree.Model.User;
 import com.gusrinda.kodetree.R;
 
 import java.io.File;
@@ -146,12 +149,36 @@ public class AddFragment extends Fragment implements LocationListener {
             if (requestCode == 1){
                 Bitmap bitmap = BitmapFactory.decodeFile(pathFile);
                 imgKamera.setImageBitmap(bitmap);
+
             }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    getLocation();
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(getContext(), "Nyalakan GPS dan Internet", Toast.LENGTH_SHORT).show();
+
+                }
+                return;
+            }
+
         }
     }
 
     //method untuk ambil data long lat
     void getLocation() {
+        ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         try {
             locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, this);
@@ -220,6 +247,7 @@ public class AddFragment extends Fragment implements LocationListener {
                             });
                         }
                     });
+                    User.UpdatePoint();
                     Toast.makeText(getContext(), "Data berhasil ditambahkan!", Toast.LENGTH_LONG).show();
                 }
             });
