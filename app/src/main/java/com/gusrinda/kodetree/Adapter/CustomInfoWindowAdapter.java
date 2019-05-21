@@ -1,12 +1,14 @@
 package com.gusrinda.kodetree.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
+import com.gusrinda.kodetree.Activity.DetailMarkerActivity;
 import com.gusrinda.kodetree.Fragment.LocationFragment;
 import com.gusrinda.kodetree.R;
 import com.squareup.picasso.Picasso;
@@ -31,22 +34,16 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     }
 
     private void SetDataWindow(Marker marker, View view) {
-        String title = marker.getTitle();
-        TextView tvNamaPohon = view.findViewById(R.id.tv_namapohon);
-        tvNamaPohon.setText(title);
-
-        String snippet = marker.getSnippet();
+        final String snippet = marker.getSnippet();
         ImageView imgPohon = view.findViewById(R.id.img_pohon);
 
         Glide.with(mContext)
                 .load(snippet)
                 .into(imgPohon);
 
-//        Picasso.get().load(snippet).into(imgPohon);
-
-        Log.e("aldy", "title : " + title
-                + "\nsnippet : " + snippet
-                + "\ncontext : " + mContext);
+        String title = marker.getTitle();
+        TextView tvNamaPohon = view.findViewById(R.id.tv_namapohon);
+        tvNamaPohon.setText(title);
     }
 
     @Override
@@ -57,7 +54,6 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoContents(Marker marker) {
-//        SetDataWindow(marker, mWindow);
         return null;
     }
 }
