@@ -1,11 +1,13 @@
 package com.gusrinda.kodetree.Activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.NonNull;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.gusrinda.kodetree.Fragment.AccountFragment;
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private  BottomNavigationView nav;
     private TextView welcome;
+    private ProgressDialog progres;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         welcome = findViewById(R.id.welcomeText);
         nav.setOnNavigationItemSelectedListener(this);
         nav.setSelectedItemId(R.id.navigation_home);
+        progres = new ProgressDialog(this);
+        progres.setMessage("Loading ...");
+        progres.show();
         User.getCurrentUser(this);
 
     }
@@ -81,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public User onUserChange(User user) {
         welcome.setText("Selamat Datang ,"+user.getUsername());
-
+        progres.hide();
         return user;
     }
 }
