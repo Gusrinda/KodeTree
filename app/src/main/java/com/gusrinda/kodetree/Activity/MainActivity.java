@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         progres.setMessage("Loading ...");
         progres.show();
         User.getCurrentUser(this);
-
     }
 
 
