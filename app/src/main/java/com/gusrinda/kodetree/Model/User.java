@@ -17,35 +17,36 @@ public class User {
     private String username;
     private int point = 0;
 
-    static final String  TAG = "USER";
+    static final String TAG = "USER";
 
-    public final static int  incrementPoint = 10;
+    public final static int incrementPoint = 10;
+
     public User(String id, String username) {
         this.id = id;
         this.username = username;
     }
 
 
-    public User setPoint(int point){
+    public User setPoint(int point) {
         this.point = point;
         return this;
     }
 
-    public User(){
+    public User() {
 
     }
 
-    public static void UpdatePoint(){
+    public static void UpdatePoint() {
 
-        FirebaseUser mUser  = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
         final DatabaseReference mReference = FirebaseDatabase.getInstance().getReference("Users").child(mUser.getUid());
         mReference.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user =dataSnapshot.getValue(User.class);
-                if(user!=null){
-                    user.point+= incrementPoint;
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null) {
+                    user.point += incrementPoint;
                     mReference.setValue(user);
                 }
 
@@ -53,10 +54,32 @@ public class User {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG,databaseError.getMessage());
+                Log.d(TAG, databaseError.getMessage());
             }
         });
 
+    }
+
+    public static void getCurrentUser(final UserValueListener listen) {
+
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        final DatabaseReference mReference = FirebaseDatabase.getInstance().getReference("Users").child(mUser.getUid());
+        mReference.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null) {
+                    listen.onUserChange(user);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, databaseError.getMessage());
+            }
+        });
     }
 
     public String getId() {
@@ -78,4 +101,9 @@ public class User {
     public int getPoint() {
         return point;
     }
+
+    public static interface UserValueListener {
+        User onUserChange(User user);
+    }
 }
+

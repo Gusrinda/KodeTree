@@ -6,18 +6,22 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.NonNull;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.gusrinda.kodetree.Fragment.AccountFragment;
 import com.gusrinda.kodetree.Fragment.AddFragment;
 import com.gusrinda.kodetree.Fragment.HomeFragment;
 import com.gusrinda.kodetree.Fragment.LocationFragment;
 import com.gusrinda.kodetree.Fragment.TriviaFragment;
+import com.gusrinda.kodetree.Model.User;
 import com.gusrinda.kodetree.R;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, User.UserValueListener {
 
 
     private  BottomNavigationView nav;
+    private TextView welcome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +29,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         nav = findViewById(R.id.nav_view);
+        welcome = findViewById(R.id.welcomeText);
         nav.setOnNavigationItemSelectedListener(this);
         nav.setSelectedItemId(R.id.navigation_home);
+        User.getCurrentUser(this);
 
     }
+
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -68,5 +76,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             return true;
         }
         return false;
+    }
+
+    @Override
+    public User onUserChange(User user) {
+        welcome.setText("Selamat Datang ,"+user.getUsername());
+
+        return user;
     }
 }
